@@ -1,51 +1,25 @@
-import React, { useState, useEffect } from "react";
-import ListaDeNotas from "./components/ListaDeNotas";
-import FormularioDeNotas from "./components/FormularioDeNotas";
-import "./App.css";
+import React, { useState, useCallback } from "react";
+import ComponenteUseMemo from "./components/ComponenteUseMemo";
+import ComponenteUseEffect from "./components/ComponenteUseEffect";
 
-function App() {
-  const [notas, setNotas] = useState();
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState("Gorka");
 
-  useEffect(() => {
-    if (!localStorage.getItem("notas")) return;
-    setNotas(JSON.parse(localStorage.getItem("notas")));
+  const increment = useCallback(() => {
+    // setCount(count + 1);
+    setCount(prev => prev + 1)
   }, []);
 
-  useEffect(() => {
-    if (!notas) return;
-    localStorage.setItem("notas", JSON.stringify(notas));
-  }, [notas]);
-
-  function agregarNota(nuevaNota) {
-    setNotas([...notas, nuevaNota]);
-  }
-
-  function eliminarNota(id) {
-    const nuevasNotas = notas.filter((nota) => nota.id !== id);
-    setNotas(nuevasNotas);
-  }
-
-  function marcarCompletada(id) {
-    const nuevasNotas = notas.map((nota) => {
-      if (nota.id === id) {
-        return { ...nota, completada: true };
-      }
-      return nota;
-    });
-    setNotas(nuevasNotas);
-  }
-
   return (
-    <div className="App">
-      <h1>Aplicación de notas</h1>
-      <FormularioDeNotas notas={notas} agregarNota={agregarNota} />
-      <ListaDeNotas
-        notas={notas}
-        eliminarNota={eliminarNota}
-        marcarCompletada={marcarCompletada}
-      />
+    <div>
+      <p>Contador: {count}</p>
+      <button onClick={increment}>Sumar</button>
+      <button onClick={() => setName("Julián")}>Cambiar Nombre</button>
+      <ComponenteUseMemo nombre={name} />
+      {count < 5 && <ComponenteUseEffect />}
     </div>
   );
 }
 
-export default App;
+export default App
