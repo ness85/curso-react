@@ -1,66 +1,49 @@
+import React, { useState, useEffect } from "react";
+import ListaDeNotas from "./components/ListaDeNotas";
+import FormularioDeNotas from "./components/FormularioDeNotas";
 import "./App.css";
 
-//Tema 7 - Estados globales:
-// import Formulario from './components/Formulario';
-// import ListaTareas from './components/ListaTareas';
-
-//Tema 8 - Enrutado:
-// import { Link } from 'react-router-dom';
-
-//Tema 9 - Peticiones API
-// import PeticionFetch from "./components/PeticionFetch";
-// import PeticionAxios from "./components/PeticionAxios";
-// import PeticionAxiosInstanciado from "./components/PeticionAxiosInstanciado";
-
-//Tema 10 - Estados globales asíncronos
-// import PokemonContext from "./contexts/PokemonContext";
-// import Pokemon from "./components/Pokemon";
-
-//Tema 11 - Interfaces de usuario
-import BootstrapGrid from "./components/BootstrapGrid";
-import BootstrapForm from "./components/BootstrapForm";
-import MaterialUIForm from "./components/MaterialUIForm";
-
-//Tema 12 - Performance de una aplicación
-// import { useState } from "react";
-// import SaludoSinMemo from "./components/SaludoSinMemo";
-// import SaludoMemo from "./components/SaludoMemo";
-
-//Tema 13 - Build del proyecto
-// import Entorno from "./components/Entorno";
-
 function App() {
+  const [notas, setNotas] = useState();
 
-  //Tema 12 - Performance de una aplicación
-  //const [estado, setEstado] = useState(false);
+  useEffect(() => {
+    if (!localStorage.getItem("notas")) return;
+    setNotas(JSON.parse(localStorage.getItem("notas")));
+  }, []);
+
+  useEffect(() => {
+    if (!notas) return;
+    localStorage.setItem("notas", JSON.stringify(notas));
+  }, [notas]);
+
+  function agregarNota(nuevaNota) {
+    setNotas([...notas, nuevaNota]);
+  }
+
+  function eliminarNota(id) {
+    const nuevasNotas = notas.filter((nota) => nota.id !== id);
+    setNotas(nuevasNotas);
+  }
+
+  function marcarCompletada(id) {
+    const nuevasNotas = notas.map((nota) => {
+      if (nota.id === id) {
+        return { ...nota, completada: true };
+      }
+      return nota;
+    });
+    setNotas(nuevasNotas);
+  }
 
   return (
     <div className="App">
-      {/* <Formulario /> */}
-      {/* <ListaTareas /> */}
-
-      {/* <Link to={"/contacto"}>Ir a contacto</Link> */}
-
-      {/* <PeticionFetch />
-      <br />
-      <PeticionAxios />
-      <br />
-      <PeticionAxiosInstanciado /> */}
-
-      {/* <PokemonContext>
-        <Pokemon />
-      </PokemonContext> */}
-
-      {/* <BootstrapGrid /> */}
-      {/* <BootstrapForm /> */}
-      <MaterialUIForm />
-      
-      {/* <SaludoSinMemo /> */}
-      {/* <SaludoMemo /> */}
-      {/* <button onClick={ () => setEstado((estadoanterior) => !estadoanterior) }>Cambia estado</button>
-      <h3>{estado.toString()}</h3> */}
-
-      {/* <Entorno /> */}
+      <h1>Aplicación de notas</h1>
+      <FormularioDeNotas notas={notas} agregarNota={agregarNota} />
+      <ListaDeNotas
+        notas={notas}
+        eliminarNota={eliminarNota}
+        marcarCompletada={marcarCompletada}
+      />
     </div>
   );
 }
