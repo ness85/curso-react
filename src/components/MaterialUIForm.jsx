@@ -44,7 +44,7 @@ const MaterialUIForm = () => {
         onChange={(event) => setMensaje(event.target.value)}
       />
       <Button type="submit" variant="contained" color="primary" style={{ marginTop: "20px" }}>
-        Enviar
+        Enviar mensaje
       </Button>
     </form>
   );
