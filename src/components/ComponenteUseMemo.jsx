@@ -10,7 +10,7 @@ const calculoMuyGrande = () => {
 };
 
 const ComponenteUseMemo = ({ nombre }) => {
-  const valor = useMemo(() => calculoMuyGrande(), [nombre]);
+  const valor = useMemo(() => calculoMuyGrande(), []);
 
   return <div>Hola {nombre}, el valor es {valor}</div>;
 };
